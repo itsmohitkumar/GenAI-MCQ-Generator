@@ -31,8 +31,8 @@ The MCQ Generator application uses advanced AI models to generate MCQs from prov
 
 - Python 3.8+
 - [Streamlit](https://streamlit.io/)
-- [OpenAI API Key](https://beta.openai.com/signup/)
-- [Google API Key](https://console.cloud.google.com/)
+- [OpenAI API Key](https://openai.com/index/openai-api/)
+- [Google API Key](https://ai.google.dev/)
 
 ### Clone the Repository
 
