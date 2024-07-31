@@ -1,6 +1,3 @@
-Creating a structured `README.md` for your GitHub project involves covering key aspects such as project introduction, setup instructions, usage guidelines, and additional resources. Here's an example `README.md` for your MCQ Generator project:
-
-```markdown
 # MCQ Generator :books:
 
 An application to generate Multiple Choice Questions (MCQs) using generative AI models like Google Gemini and OpenAI GPT models.
