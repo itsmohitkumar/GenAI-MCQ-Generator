@@ -1,0 +1,32 @@
+{
+    "1": {
+        "mcq": "What is the capital of France?",
+        "options": {
+            "a": "Berlin",
+            "b": "Madrid",
+            "c": "Paris",
+            "d": "Rome"
+        },
+        "correct": "c"
+    },
+    "2": {
+        "mcq": "Which planet is known as the Red Planet?",
+        "options": {
+            "a": "Earth",
+            "b": "Mars",
+            "c": "Jupiter",
+            "d": "Venus"
+        },
+        "correct": "b"
+    },
+    "3": {
+        "mcq": "What is the chemical symbol for water?",
+        "options": {
+            "a": "H2O",
+            "b": "CO2",
+            "c": "O2",
+            "d": "NaCl"
+        },
+        "correct": "a"
+    }
+}
