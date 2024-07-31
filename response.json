@@ -1,32 +1,52 @@
 {
     "1": {
-        "mcq": "What is the capital of France?",
+        "mcq": "What does Hooke's Law describe?",
         "options": {
-            "a": "Berlin",
-            "b": "Madrid",
-            "c": "Paris",
-            "d": "Rome"
-        },
-        "correct": "c"
-    },
-    "2": {
-        "mcq": "Which planet is known as the Red Planet?",
-        "options": {
-            "a": "Earth",
-            "b": "Mars",
-            "c": "Jupiter",
-            "d": "Venus"
+            "a": "Electrostatic forces",
+            "b": "Elastic behavior of materials",
+            "c": "Gravitational forces",
+            "d": "Chemical reactions"
         },
         "correct": "b"
     },
-    "3": {
-        "mcq": "What is the chemical symbol for water?",
+    "2": {
+        "mcq": "What is the time period of a simple pendulum dependent on?",
         "options": {
-            "a": "H2O",
-            "b": "CO2",
-            "c": "O2",
-            "d": "NaCl"
+            "a": "Its amplitude",
+            "b": "The mass of the pendulum",
+            "c": "The length of the pendulum",
+            "d": "The temperature"
         },
-        "correct": "a"
+        "correct": "c"
+    },
+    "3": {
+        "mcq": "What is Coulomb's law used to calculate?",
+        "options": {
+            "a": "Gravitational force",
+            "b": "Electric field",
+            "c": "Electric force between two charges",
+            "d": "Pressure in fluids"
+        },
+        "correct": "c"
+    },
+    "4": {
+        "mcq": "Which of the following is a colligative property of solutions?",
+        "options": {
+            "a": "Color",
+            "b": "Density",
+            "c": "Vapor pressure lowering",
+            "d": "Viscosity"
+        },
+        "correct": "c"
+    },
+    "5": {
+        "mcq": "What does Bernoulli's principle relate to?",
+        "options": {
+            "a": "Elastic behavior",
+            "b": "Fluid dynamics",
+            "c": "Thermal expansion",
+            "d": "Electrostatics"
+        },
+        "correct": "b"
     }
 }

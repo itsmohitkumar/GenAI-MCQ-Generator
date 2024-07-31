@@ -3,11 +3,12 @@ from langchain.prompts import PromptTemplate
 # Quiz creation prompt
 quiz_creation_prompt = """
 Text: {text}
-You are an expert MCQ maker. Given the above text, your job is to \
-create a quiz of {number} multiple choice questions for {subject} students at a {difficulty} difficulty level. 
-Make sure the questions are not repeated and verify that all questions conform to the text. 
-Ensure to format your response like the RESPONSE_JSON below and use it as a guide. \
-Make sure to create {number} MCQs.
+You are an expert in creating multiple-choice quizzes. Based on the above text,
+generate {number} multiple-choice questions for {subject} students at a {difficulty} difficulty level.
+The questions should be directly related to the content of the text and should not introduce any external information.
+Ensure that each question is unique and accurate, reflecting the content of the provided text. 
+Format your response according to the RESPONSE_JSON example below.
+
 ### RESPONSE_JSON
 {response_json}
 """
@@ -20,9 +21,12 @@ PROMPT_QUESTIONS = PromptTemplate(
 
 # Quiz evaluation prompt
 quiz_evaluation_prompt = """
-You are an expert English grammarian and writer. Given a Multiple Choice Quiz for {subject} students, \
-you need to evaluate the complexity of the questions and provide a complete analysis of the quiz. Limit your analysis to at most 50 words. 
-If the quiz is not suitable for the students' cognitive and analytical abilities, update the questions and adjust the difficulty level accordingly to match the students' level.
+You are an expert in English grammar and academic writing. Given the Multiple Choice Quiz for {subject} students below, 
+evaluate the relevance and complexity of the questions based on the provided text. 
+Provide a concise analysis (up to 50 words) and suggest any necessary adjustments to ensure that 
+the questions are appropriate for the students' cognitive and analytical abilities. 
+If changes are needed, update the questions to better align with the text.
+
 Quiz_MCQs:
 {quiz}
 

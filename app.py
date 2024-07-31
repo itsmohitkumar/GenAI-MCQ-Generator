@@ -3,67 +3,97 @@ import json
 import streamlit as st
 from dotenv import load_dotenv
 from src.mcqapp.mcq_generator import MCQGenerator
-from src.helper import logger 
+from src.helper import logger
 
 # Load environment variables
 load_dotenv()
-API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+LANGCHAIN_API_KEY = os.getenv("LANGCHAIN_API_KEY")
+
+# Set project name and environment variables
+PROJECT_NAME = "Mcq Generator"
+os.environ["LANGCHAIN_PROJECT"] = PROJECT_NAME
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = LANGCHAIN_API_KEY
 
 # Define available models
 models = {
+    "Google Gemini": "google",
     "GPT-3.5 Turbo": "gpt-3.5-turbo",
     "GPT-4": "gpt-4",
     "GPT-4 Turbo": "gpt-4-turbo"
 }
 
-# Initialize MCQ Generator
-selected_model = st.sidebar.selectbox("Select Model", options=list(models.keys()), index=0)
-model_name = models[selected_model]
-mcq_generator = MCQGenerator(api_key=API_KEY, model_name=model_name)
+def load_response_json():
+    with open("response.json", "r") as file:
+        return json.load(file)
 
-# Streamlit app
-st.title("🌟 MCQ Generator 🌟")
+def main():
+    st.set_page_config(page_title="MCQ Generator", page_icon=":books:")
+    st.title("MCQ Generator :books:")
 
-# Create an empty sidebar initially
-with st.sidebar:
-    sidebar_placeholder = st.empty()
+    st.sidebar.header("Configuration")
 
-# Sidebar for API Key input
-if not API_KEY:
-    with st.sidebar:
-        API_KEY = st.text_input("Enter your OpenAI API Key", type="password")
-        if API_KEY:
-            os.environ["OPENAI_API_KEY"] = API_KEY
-else:
-    st.sidebar.write("🔑 API Key is set.")
+    # Use API keys from environment variables or prompt for input
+    openai_key = OPENAI_API_KEY or st.sidebar.text_input("OpenAI API Key", type="password")
+    google_key = GOOGLE_API_KEY or st.sidebar.text_input("Google API Key", type="password")
+    model_name = st.sidebar.selectbox("Model Name", list(models.keys()), index=0)  # Default to Google Gemini
+    
+    # Load response JSON
+    response_json = load_response_json()
 
-# User inputs with unique keys
-uploaded_file = st.file_uploader("📄 Upload a PDF file", type=["pdf"], key="file_uploader_unique")
-num_questions = st.number_input("📝 Number of questions", min_value=1, max_value=100, value=10, key="num_questions_unique")
-subject = st.text_input("📚 Subject of the MCQs", key="subject_unique")
-difficulty = st.selectbox("🔢 Difficulty Level", ["Easy", "Medium", "Hard"], key="difficulty_unique")
-query = st.text_input("🔍 Topic or Focus Area for MCQ Generation", placeholder="Enter your query here", key="query_unique")
+    # File upload
+    uploaded_file = st.file_uploader("Upload a file", type=["pdf", "txt"])
+    if uploaded_file is None:
+        st.warning("Please upload a file.")
+        return
 
-# Load the response JSON using a relative path
-relative_path = os.path.join(os.path.dirname(__file__), "response.json")
-if os.path.exists(relative_path):
-    with open(relative_path, "r") as file:
-        RESPONSE_JSON = json.load(file)
-else:
-    st.error("Error: RESPONSE_JSON file not found.")
-    RESPONSE_JSON = {}
+    # Determine file type based on the uploaded file extension
+    file_extension = uploaded_file.name.split('.')[-1].lower()
+    if file_extension not in ["pdf", "txt"]:
+        st.error("Unsupported file type.")
+        return
 
-if st.button("🔄 Generate MCQs"):
-    if uploaded_file and subject and difficulty:
+    # MCQ Generator setup
+    if model_name == "google" and not google_key:
+        st.error("Please provide your Google API key.")
+        return
+    elif model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"] and not openai_key:
+        st.error("Please provide your OpenAI API key.")
+        return
+
+    mcq_generator = MCQGenerator(openai_key=openai_key, google_key=google_key, model_name=models[model_name])
+
+    # Processing file
+    with st.spinner("Processing file... :hourglass:"):
         db = mcq_generator.process_file(uploaded_file)
-        if isinstance(db, str):  # Error message from process_file
-            st.error(db)
-        else:
-            result = mcq_generator.generate_mcqs(db, num_questions, subject, difficulty, RESPONSE_JSON, query)
-            if isinstance(result, str) and "Error" in result:
-                st.error(result)
-            else:
-                st.text_area("📝 Generated MCQs", result, height=600, key="mcq_output")
-                st.download_button("📥 Download MCQs Text File", result, file_name="mcqs.txt", key="download_button")
-    else:
-        st.error("⚠️ Please upload a PDF file and fill in all required fields.")
+        if isinstance(db, str):
+            st.error(f"Error processing file: {db}")
+            return
+
+    # Integrated settings form
+    with st.form(key='mcq_form'):
+        num_questions = st.number_input("Number of Questions", min_value=1, max_value=100, value=10)
+        subject = st.text_input("Subject", value="General Knowledge")
+        difficulty = st.selectbox("Difficulty", ["Easy", "Medium", "Hard"])
+        query = st.text_area("Query", placeholder="Enter your query here")
+
+        generate_button = st.form_submit_button(label='Generate MCQs')
+
+    if generate_button:
+        with st.spinner("Generating MCQs... :page_with_curl:"):
+            mcqs = mcq_generator.generate_mcqs(db, num_questions, subject, difficulty, response_json, query)
+            st.subheader("Generated MCQs ✏️")
+            st.markdown(mcqs)  # Use markdown to preserve formatting
+            
+            # Provide a download button for the generated MCQs
+            st.download_button(
+                label="Download MCQs",
+                data=mcqs,
+                file_name="generated_mcqs.txt",
+                mime="text/plain"
+            )
+
+if __name__ == "__main__":
+    main()
