@@ -1,4 +1,4 @@
-# MCQ Generator :books:
+# GenAI MCQ Generator : Langchain | OpenAI | Gemini
 
 An application to generate Multiple Choice Questions (MCQs) using generative AI models like Google Gemini and OpenAI GPT models.
 
@@ -37,8 +37,8 @@ The MCQ Generator application uses advanced AI models to generate MCQs from prov
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/mcq-generator.git
-cd mcq-generator
+git clone https://github.com/itsmohitkumar/GenAI-MCQ-Generator.git
+cd GenAI-MCQ-Generator
 ```
 
 ### Install Dependencies
@@ -90,6 +90,7 @@ mcq-generator/
 │   └── prompt.py              # Prompt templates for question generation
 │
 ├── .env                       # Environment variables
+|__ response.json              # Json Info
 ├── app.py                     # Streamlit application entry point
 ├── requirements.txt           # Python dependencies
 └── README.md                  # Project documentation
