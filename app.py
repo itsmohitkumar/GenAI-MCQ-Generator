@@ -26,8 +26,12 @@ models = {
 }
 
 def load_response_json():
-    with open("response.json", "r") as file:
-        return json.load(file)
+    try:
+        with open("response.json", "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        st.error("response.json file not found.")
+        return None
 
 def main():
     st.set_page_config(page_title="MCQ Generator", page_icon=":books:")
@@ -35,13 +39,22 @@ def main():
 
     st.sidebar.header("Configuration")
 
-    # Use API keys from environment variables or prompt for input
-    openai_key = OPENAI_API_KEY or st.sidebar.text_input("OpenAI API Key", type="password")
-    google_key = GOOGLE_API_KEY or st.sidebar.text_input("Google API Key", type="password")
+    # Model selection
     model_name = st.sidebar.selectbox("Model Name", list(models.keys()), index=0)  # Default to Google Gemini
-    
+
+    # Conditional API key inputs
+    openai_key = OPENAI_API_KEY
+    google_key = GOOGLE_API_KEY
+
+    if model_name in ["GPT-3.5 Turbo", "GPT-4", "GPT-4 Turbo"] and not openai_key:
+        openai_key = st.sidebar.text_input("OpenAI API Key", type="password")
+    elif model_name == "Google Gemini" and not google_key:
+        google_key = st.sidebar.text_input("Google API Key", type="password")
+
     # Load response JSON
     response_json = load_response_json()
+    if response_json is None:
+        return
 
     # File upload
     uploaded_file = st.file_uploader("Upload a file", type=["pdf", "txt"])
@@ -56,10 +69,10 @@ def main():
         return
 
     # MCQ Generator setup
-    if model_name == "google" and not google_key:
+    if model_name == "Google Gemini" and not google_key:
         st.error("Please provide your Google API key.")
         return
-    elif model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"] and not openai_key:
+    elif model_name in ["GPT-3.5 Turbo", "GPT-4", "GPT-4 Turbo"] and not openai_key:
         st.error("Please provide your OpenAI API key.")
         return
 
