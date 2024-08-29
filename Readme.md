@@ -2,6 +2,8 @@
 
 An application to generate Multiple Choice Questions (MCQs) using generative AI models like Google Gemini and OpenAI GPT models.
 
+![Alt text](data/image.png)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
